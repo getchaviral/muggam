@@ -426,3 +426,46 @@
     height: 100px;
   }
 }
+/* Character Counter Styling */
+.app.light .char-count,
+.app .char-count {
+  color: #444;
+  font-size: 0.9rem;
+  margin-top: 8px;
+  text-align: right;
+  opacity: 0;
+  animation: fadeInCount 0.6s ease-out forwards;
+}
+
+.app.dark .char-count {
+  color: #ccc;
+}
+
+/* Fade-in animation */
+@keyframes fadeInCount {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Optional: bump animation on character change */
+.char-count.bump {
+  animation: bump 0.3s ease;
+}
+
+@keyframes bump {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
