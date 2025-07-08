@@ -14,15 +14,16 @@
 
 /* Light Mode */
 .app.light {
-  background: #ffffff; /* Pure white */
-  color: #333;          /* Dark text for readability */
+  background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%); /* soft gray gradient */
+  color: #1a1a1a; /* very dark text for contrast */
 }
 
 /* Dark Mode */
 .app.dark {
-  background: linear-gradient(135deg, #d3cce3 0%, #e9e4f0 100%);
-  color: #1a1a1a; /* Softer dark text */
+  background: linear-gradient(135deg, #232526 0%, #414345 100%); /* sleek, dark gray gradient */
+  color: #f5f5f5; /* off-white text for soft contrast */
 }
+
 
 .wrapper {
   min-height: 100vh;
