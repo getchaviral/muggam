@@ -14,14 +14,14 @@
 
 /* Light Mode */
 .app.light {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: #333;
+  background: #ffffff; /* Pure white */
+  color: #333;          /* Dark text for readability */
 }
 
 /* Dark Mode */
 .app.dark {
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-  color: #f0f0f0;
+  background: linear-gradient(135deg, #d3cce3 0%, #e9e4f0 100%);
+  color: #1a1a1a; /* Softer dark text */
 }
 
 .wrapper {
