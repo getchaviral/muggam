@@ -22,7 +22,7 @@ MUGGAM is a modern web application that allows users to create amazing videos fr
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/yourusername/muggam.git
+   git clone https://github.com/getchaviral/muggam.git
    cd muggam
    ```
 
