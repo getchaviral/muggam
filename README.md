@@ -1,70 +1,118 @@
-# Getting Started with Create React App
+# MUGGAM Video Editor
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+MUGGAM is a full-stack video generation app where users upload images and text, then generate an MP4 using an FFmpeg-powered backend.
 
-## Available Scripts
+## Flow
 
-In the project directory, you can run:
+User uploads images -> Backend uses FFmpeg -> Apply motion + transitions + text + optional music -> Stream MP4 back to frontend (no server file saved).
 
-### `npm start`
+## Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Google login UI.
+- Text + multi-image upload.
+- Real backend video generation with FFmpeg.
+- Cinematic motion effect + smooth fade transitions.
+- Optional background music track.
+- Quality mode selection (`high` 1080p / `standard` 720p).
+- Render controls (seconds per image, transition duration).
+- MP4 preview and download.
+- No persistent video storage on server.
+- Improved error details from backend for easier debugging.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Tech Stack
 
-### `npm test`
+- Frontend: React
+- Backend: Node.js + Express + Multer
+- Video processing: FFmpeg (`ffmpeg-static`)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Prerequisites
 
-### `npm run build`
+- Node.js 18+ recommended
+- npm 9+ recommended
+- Windows/Linux/macOS
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Run
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. Install dependencies:
+```sh
+npm install
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+2. Start backend:
+```sh
+npm run server
+```
 
-### `npm run eject`
+3. In another terminal, start frontend:
+```sh
+npm start
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Frontend runs on `http://localhost:3000` and backend on `http://localhost:5000`.
+Run backend and frontend in two separate terminals.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## API
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+`POST /api/generate-video` (multipart/form-data)
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- `text`: string
+- `images`: one or more image files (required)
+- `music`: one audio file (optional)
+- `secondsPerImage`: number (`1.5` to `8`)
+- `transitionDuration`: number (`0.2` to `2`, and auto-clamped based on image duration)
+- `quality`: `high` or `standard`
 
-## Learn More
+Defaults:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- `secondsPerImage = 3`
+- `transitionDuration = 0.7`
+- `quality = high`
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Limits:
 
-### Code Splitting
+- max images: `20`
+- max files in request: `25`
+- max file size: `20MB` per file
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Response:
 
-### Analyzing the Bundle Size
+- `200 OK` with `video/mp4` binary stream.
+- `400` with JSON error:
+```json
+{
+  "error": "Upload at least one image."
+}
+```
+- `500` with JSON error:
+```json
+{
+  "error": "Video generation failed.",
+  "details": "FFmpeg error details..."
+}
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Minimal request example:
+```sh
+curl -X POST http://localhost:5000/api/generate-video \
+  -F "text=My Story" \
+  -F "quality=high" \
+  -F "secondsPerImage=3" \
+  -F "transitionDuration=0.7" \
+  -F "images=@image1.jpg" \
+  -F "images=@image2.jpg"
+```
 
-### Making a Progressive Web App
+## Health Check
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+`GET /api/health`
 
-### Advanced Configuration
+Response:
+```json
+{ "ok": true }
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Notes
 
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Videos are generated in a temporary directory and deleted after response.
+- If generation fails, check backend terminal logs for `FFmpeg error: ...`.
+- Current version has no project save/history and no job queue.
