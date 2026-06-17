@@ -1,4 +1,4 @@
-# MUGGAM Video Editor
+# "MUGGAM" Video Editor
 
 MUGGAM is a full-stack video generation app where users upload images and text, then generate an MP4 using an FFmpeg-powered backend.
 
